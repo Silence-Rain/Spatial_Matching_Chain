@@ -9,4 +9,4 @@ This is the implementation of a VLDB paper: [On Efficient Spatial Matching](http
 
 #### Highlight
 
-- Using R-Tree as the NN-Query method to improve efficiency
+- Using KD-Tree as the NN-Query method to improve efficiency
