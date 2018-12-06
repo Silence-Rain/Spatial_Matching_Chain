@@ -32,13 +32,14 @@ int main(int argc, char** argv)
 	}
 	else
 	{
-		pFile = "../data/PData_1";
-		oFile = "../data/OData_1";
+		pFile = "./data/PData_1";
+		oFile = "./data/OData_1";
 	}
 
 	log("info", "Read dataset " + pFile + ", " + oFile + ": Begin...");
 	readFile(pFile, P, "p");
 	readFile(oFile, O, "o");
+
 	log("info", "Read dataset " + pFile + ", " + oFile + ": Success!");
 	log("info", "--------------------------------");
 

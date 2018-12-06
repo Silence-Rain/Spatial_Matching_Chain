@@ -45,19 +45,11 @@ void weightedChain(map<string, Node>& P, map<string, Node>& O, deque<Node*>& C, 
 {
 	srand(time(0));
 
-	//// 生成 O 的所有 keys
-	//vector<string> OKeys;
-	//for (map<string, Node>::iterator it = O.begin(); it != O.end(); ++it)
-	//{
-	//	OKeys.push_back(it->first);
-	//}
-
 	while (!O.empty())
 	{
 		// pick the first object o from O
-		// random? O(n^2)
-		// Node* o = &O[OKeys[rand() % O.size()]];
 		map<string, Node>::iterator it = O.begin();
+		advance(it, rand() % O.size());
 		Node* o = &(it->second);
 		// insert {o} into C
 		C.push_front(o);
@@ -68,6 +60,7 @@ void weightedChain(map<string, Node>& P, map<string, Node>& O, deque<Node*>& C, 
 
 			if (O.find(x->id) != O.end())
 			{
+				cout<<O.size()<<" Os remaining..."<<endl;
 				clock_t preTimeSlice, exeTimeSlice;
 
 				string y_key = findNearestNeighbor(P, *x, preTimeSlice, exeTimeSlice);

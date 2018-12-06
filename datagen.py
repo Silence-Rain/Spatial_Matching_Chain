@@ -79,10 +79,10 @@ if __name__ == '__main__':
 	# 命令行参数：分布选项，P数量，O数量，P输出文件，O输出文件，点坐标最小值，点坐标最大值，分布参数
 	args = sys.argv
 	distOption = args[1] if len(sys.argv) > 1 else "exp"
-	Pnum = int(args[2]) if len(sys.argv) > 2 else 1000
-	Onum = int(args[3]) if len(sys.argv) > 3 else 500
-	PPath = args[4] if len(sys.argv) > 4 else "../data/PData"
-	OPath = args[5] if len(sys.argv) > 5 else "../data/OData"
+	Pnum = int(args[2]) if len(sys.argv) > 2 else 500
+	Onum = int(args[3]) if len(sys.argv) > 3 else 250
+	PPath = args[4] if len(sys.argv) > 4 else "./data/PData"
+	OPath = args[5] if len(sys.argv) > 5 else "./data/OData"
 	minValue = int(args[6]) if len(sys.argv) > 6 else 0
 	maxValue = int(args[7]) if len(sys.argv) > 7 else 1000
 	param = float(args[8]) if len(sys.argv) > 8 else 1000
