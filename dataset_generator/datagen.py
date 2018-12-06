@@ -1,6 +1,3 @@
-# 先根据分布，生成点集
-# 再根据点集生成weight
-
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,9 +7,9 @@ def genExponetial(num, minValue, maxValue, param):
 	for i in range(num):
 		x = y = -1
 		while x < minValue or x > maxValue:
-			x = int(np.random.exponential(param, 1)[0])
+			x = int(np.random.exponential(param))
 		while y < minValue or y > maxValue:
-			y = int(np.random.exponential(param, 1)[0])
+			y = int(np.random.exponential(param))
 
 		ret.append([x, y])
 
@@ -35,7 +32,7 @@ def zipf(minValue, maxValue, param):
 
 	# i follows zipf distribution and lies between 1 and V
 	# x lies between 0. and 1. and then between minValue and maxValue
-	x = (i-1) / (V - 1)
+	x = (i - 1) / (V - 1)
 	x = (maxValue - minValue) * x + minValue
 
 	return x
@@ -53,6 +50,23 @@ def genZipf(num, minValue, maxValue, param):
 		ret.append([x, y])
 
 	return np.array(ret)
+
+
+def genWeight(data, r, ratio):
+	weight = []
+	for index, i in enumerate(data):
+		k = 0
+
+		for j in data:
+			dist = np.linalg.norm(i - j)
+			if dist < r:
+				k += 1
+
+		temp = int(np.ceil(np.random.normal(ratio * k, 1)))
+		weight.append(temp if temp >= 1 else 1)
+
+	weight = np.array(weight).reshape(-1, 1)
+	return np.hstack((weight, data))
 
 
 def writeFile(path, data):
@@ -90,21 +104,28 @@ if __name__ == '__main__':
 	try:
 		if distOption == "exp":
 			for i in range(4):
-				P = genExponetial(Pnum, minValue, maxValue, param)
-				O = genExponetial(Onum, minValue, maxValue, param)
+				P_temp = genExponetial(Pnum, minValue, maxValue, param)
+				O_temp = genExponetial(Onum, minValue, maxValue, param)
 
-				print("\n...Generation Complete!")
+				
+				P = genWeight(P_temp, (maxValue - minValue) / 20, 10)
+				O = genWeight(O_temp, (maxValue - minValue) / 20, 5)
 				writeFile("%s_%s" % (PPath, i + 1), P)
 				writeFile("%s_%s" % (OPath, i + 1), O)
+
+			print("\n...Generation Complete!")
 
 		elif distOption == "zipf":
 			for i in range(4):
 				P = genZipf(Pnum * 4, minValue, maxValue, param)
 				O = genZipf(Onum * 4, minValue, maxValue, param)
 
-				print("\n...Generation Complete!")
+				P = genWeight(P_temp, (maxValue - minValue) / 20, 10)
+				O = genWeight(O_temp, (maxValue - minValue) / 20, 5)
 				writeFile("%s_%s" % (PPath, i + 1), P)
 				writeFile("%s_%s" % (OPath, i + 1), O)
+
+			print("\n...Generation Complete!")
 
 		else:
 			raise Exception("Invalid distribution option")
@@ -115,7 +136,7 @@ if __name__ == '__main__':
 
 	finally:
 		plt.subplot(221, title="Positions of P")
-		plt.scatter(P[:,:1], P[:,1:])
+		plt.scatter(P[:,1:2], P[:,2:3])
 		plt.subplot(222, title="Positions of O")
-		plt.scatter(O[:,:1], O[:,1:])
+		plt.scatter(O[:,1:2], O[:,2:3])
 		plt.show()
