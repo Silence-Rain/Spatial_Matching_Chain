@@ -12,7 +12,7 @@
 
 using namespace std;
 
-void readFile(string, map<string, Node>&, map<string, Node>&);
+void readFile(string, map<string, Node>&, string);
 void writeFile(string, vector<Pair>);
 void log(string, string);
 
@@ -22,21 +22,24 @@ int main(int argc, char** argv)
 	map<string, Node> O;			// Users
 	deque<Node*> C;					// Chain
 	vector<Pair> A;					// Match
-	string inputFile;
+	string pFile, oFile;
 	clock_t startTime, finishTime, preTime = 0, exeTime = 0, timeCost;
 
-	if (argc > 1)
+	if (argc == 3)
 	{
-		inputFile = string(argv[1]);
+		pFile = string(argv[1]);
+		oFile = string(argv[2]);
 	}
 	else
 	{
-		inputFile = "./data/input.dat";
+		pFile = "../data/PData_1";
+		oFile = "../data/OData_1";
 	}
 
-	log("info", "Read dataset: Begin...");
-	readFile(inputFile, P, O);
-	log("info", "Read dataset: Success!");
+	log("info", "Read dataset " + pFile + ", " + oFile + ": Begin...");
+	readFile(pFile, P, "p");
+	readFile(oFile, O, "o");
+	log("info", "Read dataset " + pFile + ", " + oFile + ": Success!");
 	log("info", "--------------------------------");
 
 	log("info", "Use Weighted Chain to find best matching...");
@@ -51,15 +54,15 @@ int main(int argc, char** argv)
 	log("info", "Preprocessing time: " + to_string(preTime) + ", " + to_string(round(preTime / (timeCost == 0 ? 1 : timeCost))) + "%");
 	log("info", "Execution time: " + to_string(exeTime) + ", " + to_string(round(exeTime / (timeCost == 0 ? 1 : timeCost))) + "%");
 
-	log("info", "--------------------------------");
-	log("info", "Write result: Begin...");
-	writeFile("./data/output.dat", A);
-	log("info", "Write result: Success!");
+	// log("info", "--------------------------------");
+	// log("info", "Write result: Begin...");
+	// writeFile("../data/output.dat", A);
+	// log("info", "Write result: Success!");
 
 	return 0;
 }
 
-void readFile(string path, map<string, Node>& p, map<string, Node>& o)
+void readFile(string path, map<string, Node>& data, string label)
 {
 	ifstream inFile(path);
 
@@ -69,20 +72,14 @@ void readFile(string path, map<string, Node>& p, map<string, Node>& o)
 		exit(1);
 	}
 
-	string id;
-	int x, y, w;
+	int x, y, w, i = 0;
 
-	while (inFile >> id >> x >> y >> w)
+	while (inFile >> w >> x >> y)
 	{
+		string id = label + to_string(i);
 		Node temp(id, x, y, w);
-		if (id[0] == 'p')
-		{
-			p.insert(pair<string, Node>(id, temp));
-		}
-		else
-		{
-			o.insert(pair<string, Node>(id, temp));
-		}
+		data.insert(pair<string, Node>(id, temp));
+		i++;
 	}
 }
 
@@ -105,8 +102,7 @@ void writeFile(string path, vector<Pair> v)
 void log(string type, string content)
 {
 	time_t now = time(0);
-	char dateStr[26];
-	ctime_s(dateStr, 26, &now);
+	char* dateStr = ctime(&now);
 	string date(dateStr);
 	cout << "[" << date.substr(0, date.size() - 1) << "] " << "[" << type << "]: " << content << endl;
 }
