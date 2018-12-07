@@ -8,7 +8,7 @@ def run_process(PPath, OPath):
 
 
 if __name__ == "__main__":
-	for i in range(1):
+	for i in range(4):
 		PPath = "./data/PData_%s" % str(i + 1)
 		OPath = "./data/OData_%s" % str(i + 1)
 		p = Process(target=run_process,args=(PPath, OPath))

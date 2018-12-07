@@ -23,7 +23,8 @@ int main(int argc, char** argv)
 	deque<Node*> C;					// Chain
 	vector<Pair> A;					// Match
 	string pFile, oFile;
-	clock_t startTime, finishTime, preTime = 0, exeTime = 0, timeCost;
+	clock_t startTime, finishTime;
+	double timeCost = 0, preTime = 0, exeTime = 0;
 
 	if (argc == 3)
 	{
@@ -52,13 +53,13 @@ int main(int argc, char** argv)
 	timeCost = 1.0 * (finishTime - startTime) / CLOCKS_PER_SEC;
 	log("info", "Weighted Chain complete!");
 	log("info", "Total time: " + to_string(timeCost));
-	log("info", "Preprocessing time: " + to_string(preTime) + ", " + to_string(round(preTime / (timeCost == 0 ? 1 : timeCost))) + "%");
-	log("info", "Execution time: " + to_string(exeTime) + ", " + to_string(round(exeTime / (timeCost == 0 ? 1 : timeCost))) + "%");
+	log("info", "Preprocessing time: " + to_string(preTime) + ", " + to_string(100 * (preTime / timeCost)) + "%");
+	log("info", "Execution time: " + to_string(exeTime) + ", " + to_string(100 * (exeTime / timeCost)) + "%");
 
-	// log("info", "--------------------------------");
-	// log("info", "Write result: Begin...");
-	// writeFile("../data/output.dat", A);
-	// log("info", "Write result: Success!");
+	log("info", "--------------------------------");
+	log("info", "Write result: Begin...");
+	writeFile("./data/output_"+pFile.substr(pFile.length()-1, 1), A);
+	log("info", "Write result: Success!");
 
 	return 0;
 }

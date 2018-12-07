@@ -9,9 +9,11 @@
 #include "Pair.h"
 #include "KDTree.h"
 
+#include <fstream>
+
 using namespace std;
 
-string findNearestNeighbor(map<string, Node> m, Node n, clock_t& preTime, clock_t& exeTime)
+string findNearestNeighbor(map<string, Node> m, Node n, double& preTime, double& exeTime)
 {
 	KDTree* kd = new KDTree();
 	const int size = m.size();
@@ -41,7 +43,7 @@ string findNearestNeighbor(map<string, Node> m, Node n, clock_t& preTime, clock_
 	return ret;
 }
 
-void weightedChain(map<string, Node>& P, map<string, Node>& O, deque<Node*>& C, vector<Pair>& A, clock_t& preTime, clock_t& exeTime)
+void weightedChain(map<string, Node>& P, map<string, Node>& O, deque<Node*>& C, vector<Pair>& A, double& preTime, double& exeTime)
 {
 	srand(time(0));
 
@@ -60,8 +62,7 @@ void weightedChain(map<string, Node>& P, map<string, Node>& O, deque<Node*>& C, 
 
 			if (O.find(x->id) != O.end())
 			{
-				cout<<O.size()<<" Os remaining..."<<endl;
-				clock_t preTimeSlice, exeTimeSlice;
+				double preTimeSlice, exeTimeSlice;
 
 				string y_key = findNearestNeighbor(P, *x, preTimeSlice, exeTimeSlice);
 				Node* y = &P[y_key];
@@ -69,7 +70,8 @@ void weightedChain(map<string, Node>& P, map<string, Node>& O, deque<Node*>& C, 
 				preTime += preTimeSlice;
 				exeTime += exeTimeSlice;
 
-				if (C.size() >= 2 && y == C[1])
+				// NN查询有时候会陷入死循环，加上这一步暂时跳出
+				if (C.size() >= 2 && (y == C[1] || y == C[3]))
 				{
 					if (x->weight > y->weight)
 					{
@@ -102,7 +104,7 @@ void weightedChain(map<string, Node>& P, map<string, Node>& O, deque<Node*>& C, 
 			}
 			else
 			{
-				clock_t preTimeSlice, exeTimeSlice;
+				double preTimeSlice, exeTimeSlice;
 
 				string y_key = findNearestNeighbor(O, *x, preTimeSlice, exeTimeSlice);
 				Node* y = &O[y_key];
